@@ -38,6 +38,8 @@ jobs:
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v1
         with:
+          args: --no-bundle
+          uploadPlainBinary: true
           uploadWorkflowArtifacts: true
           workflowArtifactNamePattern: "[name]-[version]-[platform]-[arch]"
 

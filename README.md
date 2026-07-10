@@ -26,11 +26,10 @@ npm run tauri dev
 npm run tauri build
 ```
 
-Windows 打包完成后，常见输出位置：
+Windows 云端构建默认生成免安装 exe。常见输出位置：
 
 ```text
 src-tauri\target\release\
-src-tauri\target\release\bundle\
 ```
 
 ## GitHub Actions 云端打包
