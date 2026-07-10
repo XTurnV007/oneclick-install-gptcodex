@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatGPT 安装助手</title>
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Tauri 桌面版</p>
+          <h1>ChatGPT 安装助手</h1>
+          <p class="summary">自动打开 Microsoft Store 页面，优先使用本地安装包，并在下载完成后启动安装。</p>
+        </div>
+        <div class="status-pill" id="status-pill">
+          <span class="dot"></span>
+          <span id="status-text">准备就绪</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="actions">
+          <button class="primary" id="start-button" type="button">开始下载并安装</button>
+          <button id="open-store-button" type="button">只打开商店页面</button>
+          <button id="scan-button" type="button">扫描本地安装包</button>
+        </div>
+
+        <div class="grid">
+          <div class="metric">
+            <span>程序目录</span>
+            <strong id="app-dir">读取中</strong>
+          </div>
+          <div class="metric">
+            <span>下载目录</span>
+            <strong id="downloads-dir">读取中</strong>
+          </div>
+          <div class="metric">
+            <span>当前策略</span>
+            <strong>本地优先 / 商店兜底</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="log-panel">
+        <div class="log-header">
+          <h2>运行日志</h2>
+          <span id="log-count">0 条</span>
+        </div>
+        <pre id="log"></pre>
+      </section>
+    </main>
+  </body>
+</html>
