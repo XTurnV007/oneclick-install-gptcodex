@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: lts/*
           cache: npm
 
       - name: Setup Rust
@@ -36,13 +36,17 @@ jobs:
         run: npm ci
 
       - name: Build Tauri app
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@v1
+        with:
+          uploadWorkflowArtifacts: true
+          workflowArtifactNamePattern: "[name]-[version]-[platform]-[arch]"
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: ChatGPT-installer-assistant-windows
-          if-no-files-found: error
+          if-no-files-found: ignore
           path: |
             src-tauri/target/release/*.exe
             src-tauri/target/release/bundle/**/*.exe

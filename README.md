@@ -47,7 +47,7 @@ src-tauri\target\release\bundle\
 2. 打开仓库的 Actions 页面
 3. 选择 `Build Tauri Windows`
 4. 点击 `Run workflow`
-5. 构建完成后，在该次 workflow 页面底部下载 artifact：`ChatGPT-installer-assistant-windows`
+5. 构建完成后，在该次 workflow 页面底部下载 artifact：`ChatGPT-installer-assistant-windows`，或下载 Tauri action 自动上传的 Windows artifact
 
 也可以推送形如 `v1.0.0` 的 tag 自动触发构建：
 
