@@ -18,10 +18,13 @@
         </header>
 
         <section class="hero">
+          <div class="app-icon" aria-hidden="true">
+            <span>●</span>
+          </div>
           <div class="hero-copy">
-            <p class="eyebrow">Tauri for Windows</p>
-            <h1>ChatGPT 安装助手</h1>
-            <p class="summary">本地优先，商店兜底，下载完成后继续安装。</p>
+            <p class="eyebrow">Windows 安装助手</p>
+            <h1>安装 ChatGPT</h1>
+            <p class="summary">自动选择可用方式获取安装包，并在准备完成后继续安装。</p>
           </div>
           <div class="status-pill" id="status-pill" data-mode="ready">
             <span class="pulse"></span>
@@ -29,64 +32,51 @@
           </div>
         </section>
 
-        <section class="control-surface">
-          <div class="actions" aria-label="安装操作">
-            <button class="primary" id="start-button" type="button">
-              <span class="button-mark">▶</span>
-              <span>开始</span>
-            </button>
-            <button id="open-store-button" type="button">
-              <span class="button-mark">↗</span>
-              <span>商店</span>
-            </button>
-            <button id="scan-button" type="button">
-              <span class="button-mark">⌕</span>
-              <span>扫描</span>
-            </button>
+        <section class="install-card">
+          <div class="install-copy">
+            <h2>一键完成安装</h2>
+            <p>程序会先检查本地安装包；如果没有，会尝试系统安装通道，并在需要时打开 Microsoft Store 页面。</p>
           </div>
-
-          <div class="phase-row" aria-label="安装进度">
-            <div class="phase is-active" id="phase-local">
-              <span class="phase-dot"></span>
-              <strong>本地</strong>
-              <small>查找安装包</small>
-            </div>
-            <div class="phase" id="phase-winget">
-              <span class="phase-dot"></span>
-              <strong>命令</strong>
-              <small>尝试 winget</small>
-            </div>
-            <div class="phase" id="phase-store">
-              <span class="phase-dot"></span>
-              <strong>商店</strong>
-              <small>打开页面</small>
-            </div>
-            <div class="phase" id="phase-install">
-              <span class="phase-dot"></span>
-              <strong>安装</strong>
-              <small>提权启动</small>
-            </div>
-          </div>
+          <button class="primary" id="start-button" type="button">
+            <span class="button-mark">▶</span>
+            <span>安装 ChatGPT</span>
+          </button>
         </section>
 
-        <section class="info-grid">
-          <div class="info-item">
-            <span>应用目录</span>
-            <strong id="app-dir">读取中</strong>
+        <section class="progress-card" aria-label="安装进度">
+          <div class="phase is-active" id="phase-prepare">
+            <span class="phase-index">1</span>
+            <div>
+              <strong>准备</strong>
+              <small>检查当前环境</small>
+            </div>
           </div>
-          <div class="info-item">
-            <span>下载目录</span>
-            <strong id="downloads-dir">读取中</strong>
+          <div class="phase" id="phase-acquire">
+            <span class="phase-index">2</span>
+            <div>
+              <strong>获取</strong>
+              <small>寻找或下载安装包</small>
+            </div>
           </div>
-          <div class="info-item accent">
-            <span>构建方式</span>
-            <strong>GitHub Actions 云端打包</strong>
+          <div class="phase" id="phase-verify">
+            <span class="phase-index">3</span>
+            <div>
+              <strong>验证</strong>
+              <small>确认安装包状态</small>
+            </div>
+          </div>
+          <div class="phase" id="phase-install">
+            <span class="phase-index">4</span>
+            <div>
+              <strong>安装</strong>
+              <small>启动安装程序</small>
+            </div>
           </div>
         </section>
 
         <section class="log-panel">
           <div class="log-header">
-            <h2>活动</h2>
+            <h2>安装记录</h2>
             <span id="log-count">0 条</span>
           </div>
           <pre id="log"></pre>
