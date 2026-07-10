@@ -14,8 +14,12 @@ type WingetResult = {
   message: string;
 };
 
+type StatusMode = "ready" | "working" | "done" | "warn";
+type PhaseName = "local" | "winget" | "store" | "install";
+
 const DOWNLOAD_WAIT_MS = 30 * 60 * 1000;
 const POLL_MS = 2000;
+const phases: PhaseName[] = ["local", "winget", "store", "install"];
 
 let logCount = 0;
 let busy = false;
@@ -30,9 +34,18 @@ const scanButton = document.querySelector<HTMLButtonElement>("#scan-button")!;
 const appDir = document.querySelector<HTMLElement>("#app-dir")!;
 const downloadsDir = document.querySelector<HTMLElement>("#downloads-dir")!;
 
-function setStatus(message: string, mode: "ready" | "working" | "done" | "warn" = "working") {
+function setStatus(message: string, mode: StatusMode = "working") {
   statusText.textContent = message;
   statusPill.dataset.mode = mode;
+}
+
+function setPhase(active: PhaseName, done: PhaseName[] = [], warn: PhaseName[] = []) {
+  for (const phase of phases) {
+    const node = document.querySelector<HTMLElement>(`#phase-${phase}`)!;
+    node.classList.toggle("is-active", phase === active);
+    node.classList.toggle("is-done", done.includes(phase));
+    node.classList.toggle("is-warn", warn.includes(phase));
+  }
 }
 
 function write(message: string) {
@@ -50,6 +63,7 @@ function setBusy(value: boolean) {
 }
 
 async function scanLocalInstaller(): Promise<string | null> {
+  setPhase("local");
   const installer = await invoke<string | null>("find_installer");
   if (installer) {
     write(`找到安装包: ${installer}`);
@@ -60,6 +74,7 @@ async function scanLocalInstaller(): Promise<string | null> {
 }
 
 async function installFoundFile(path: string): Promise<boolean> {
+  setPhase("install", ["local"]);
   const complete = await invoke<boolean>("is_download_complete", { path });
   if (!complete) {
     write("安装包还在写入，继续等待。");
@@ -70,18 +85,21 @@ async function installFoundFile(path: string): Promise<boolean> {
   write(`数字签名状态: ${signature}`);
 
   if (/^(NotSigned|HashMismatch|NotTrusted)/i.test(signature)) {
+    setPhase("install", ["local"], ["install"]);
     setStatus("签名异常，已停止自动启动", "warn");
     write("安装包签名异常。请确认文件来源后手动运行。");
     return true;
   }
 
   await invoke("launch_elevated", { path });
+  setPhase("install", ["local", "winget", "store", "install"]);
   setStatus("已请求管理员权限", "done");
   write("已请求管理员权限启动安装包，请在弹窗中继续安装。");
   return true;
 }
 
 async function openStorePages() {
+  setPhase("store", ["local"]);
   setStatus("正在打开商店页面");
   write("正在打开 Microsoft Store 网页和商店应用。");
   await invoke("open_store_pages");
@@ -91,6 +109,7 @@ async function startFlow() {
   if (busy) return;
 
   setBusy(true);
+  setPhase("local");
   setStatus("正在检查本地安装包");
   write("开始安装流程。");
 
@@ -100,12 +119,14 @@ async function startFlow() {
       return;
     }
 
+    setPhase("winget", ["local"]);
     setStatus("正在尝试 winget");
     write("尝试通过 winget 从 Microsoft Store 安装。");
     const winget = await invoke<WingetResult>("try_winget");
     if (!winget.available) {
       write("未检测到 winget，改用商店页面方式。");
     } else if (winget.success) {
+      setPhase("install", ["local", "winget"]);
       setStatus("winget 命令已完成", "done");
       write("winget 已完成安装命令。");
       return;
@@ -125,6 +146,7 @@ async function startFlow() {
       await new Promise((resolve) => window.setTimeout(resolve, POLL_MS));
     }
 
+    setPhase("store", ["local", "winget"], ["store"]);
     setStatus("等待超时", "warn");
     write("等待超时。也可以把 ChatGPT Installer.exe 放到本程序同目录后重新开始。");
   } catch (error) {
@@ -142,6 +164,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   write(`程序目录: ${info.app_dir}`);
   write(`下载目录: ${info.downloads_dir}`);
   write(`目标页面: ${info.store_url}`);
+  setPhase("local");
   setStatus("准备就绪", "ready");
 
   startButton.addEventListener("click", startFlow);

@@ -9,47 +9,88 @@
   </head>
   <body>
     <main class="shell">
-      <section class="hero">
-        <div>
-          <p class="eyebrow">Tauri 桌面版</p>
-          <h1>ChatGPT 安装助手</h1>
-          <p class="summary">自动打开 Microsoft Store 页面，优先使用本地安装包，并在下载完成后启动安装。</p>
-        </div>
-        <div class="status-pill" id="status-pill">
-          <span class="dot"></span>
-          <span id="status-text">准备就绪</span>
-        </div>
-      </section>
+      <section class="app-window">
+        <header class="titlebar" aria-label="窗口状态">
+          <span class="traffic close"></span>
+          <span class="traffic minimize"></span>
+          <span class="traffic zoom"></span>
+          <span class="titlebar-label">ChatGPT Installer</span>
+        </header>
 
-      <section class="panel">
-        <div class="actions">
-          <button class="primary" id="start-button" type="button">开始下载并安装</button>
-          <button id="open-store-button" type="button">只打开商店页面</button>
-          <button id="scan-button" type="button">扫描本地安装包</button>
-        </div>
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Tauri for Windows</p>
+            <h1>ChatGPT 安装助手</h1>
+            <p class="summary">本地优先，商店兜底，下载完成后继续安装。</p>
+          </div>
+          <div class="status-pill" id="status-pill" data-mode="ready">
+            <span class="pulse"></span>
+            <span id="status-text">准备就绪</span>
+          </div>
+        </section>
 
-        <div class="grid">
-          <div class="metric">
-            <span>程序目录</span>
+        <section class="control-surface">
+          <div class="actions" aria-label="安装操作">
+            <button class="primary" id="start-button" type="button">
+              <span class="button-mark">▶</span>
+              <span>开始</span>
+            </button>
+            <button id="open-store-button" type="button">
+              <span class="button-mark">↗</span>
+              <span>商店</span>
+            </button>
+            <button id="scan-button" type="button">
+              <span class="button-mark">⌕</span>
+              <span>扫描</span>
+            </button>
+          </div>
+
+          <div class="phase-row" aria-label="安装进度">
+            <div class="phase is-active" id="phase-local">
+              <span class="phase-dot"></span>
+              <strong>本地</strong>
+              <small>查找安装包</small>
+            </div>
+            <div class="phase" id="phase-winget">
+              <span class="phase-dot"></span>
+              <strong>命令</strong>
+              <small>尝试 winget</small>
+            </div>
+            <div class="phase" id="phase-store">
+              <span class="phase-dot"></span>
+              <strong>商店</strong>
+              <small>打开页面</small>
+            </div>
+            <div class="phase" id="phase-install">
+              <span class="phase-dot"></span>
+              <strong>安装</strong>
+              <small>提权启动</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="info-grid">
+          <div class="info-item">
+            <span>应用目录</span>
             <strong id="app-dir">读取中</strong>
           </div>
-          <div class="metric">
+          <div class="info-item">
             <span>下载目录</span>
             <strong id="downloads-dir">读取中</strong>
           </div>
-          <div class="metric">
-            <span>当前策略</span>
-            <strong>本地优先 / 商店兜底</strong>
+          <div class="info-item accent">
+            <span>构建方式</span>
+            <strong>GitHub Actions 云端打包</strong>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="log-panel">
-        <div class="log-header">
-          <h2>运行日志</h2>
-          <span id="log-count">0 条</span>
-        </div>
-        <pre id="log"></pre>
+        <section class="log-panel">
+          <div class="log-header">
+            <h2>活动</h2>
+            <span id="log-count">0 条</span>
+          </div>
+          <pre id="log"></pre>
+        </section>
       </section>
     </main>
   </body>
